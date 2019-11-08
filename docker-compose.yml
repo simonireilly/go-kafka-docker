@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  kafka:
+    image: landoop/kafka-lenses-dev
+    env_file: .env
+    environment:
+      LENSES_SECURITY_MODE: "NONE"
+      LENSES_SECURITY_USERS: "[]"
+      LENSES_SECURITY_GROUPS: "[]"
+      SAMPLEDATA: "0"
+      RUNNING_SAMPLEDATA: "0"
+    ports:
+      - 3030:3030
+      - 9092
+      - 2181
+      - 8081
+      - 9581
+      - 9582
+      - 9584
+      - 9585
+
+  consumer:
+    build:
+      dockerfile: ../Dockerfile
+      context: ./consumer
+      target: builder
+    environment:
+      KAFKA_BROKER_URL: PLAINTEXT://kafka:9092
+    depends_on:
+      - kafka
+  producer:
+    build:
+      dockerfile: ../Dockerfile
+      context: ./producer
+      target: builder
+    environment:
+      KAFKA_BROKER_URL: PLAINTEXT://kafka:9092
+    depends_on:
+      - kafka
