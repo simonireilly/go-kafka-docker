@@ -1,6 +1,25 @@
 version: '3.5'
 
 services:
+  consumer:
+    build:
+      dockerfile: ../Dockerfile
+      context: ./consumer
+      target: builder
+    environment:
+      KAFKA_BROKERS: PLAINTEXT://kafka:9092
+    depends_on:
+      - kafka
+  producer:
+    build:
+      dockerfile: ../Dockerfile
+      context: ./producer
+      target: builder
+    environment:
+      KAFKA_BROKERS: PLAINTEXT://kafka:9092
+    depends_on:
+      - kafka
+
   kafka:
     image: landoop/kafka-lenses-dev
     env_file: .env
@@ -19,22 +38,3 @@ services:
       - 9582
       - 9584
       - 9585
-
-  consumer:
-    build:
-      dockerfile: ../Dockerfile
-      context: ./consumer
-      target: builder
-    environment:
-      KAFKA_BROKER_URL: PLAINTEXT://kafka:9092
-    depends_on:
-      - kafka
-  producer:
-    build:
-      dockerfile: ../Dockerfile
-      context: ./producer
-      target: builder
-    environment:
-      KAFKA_BROKER_URL: PLAINTEXT://kafka:9092
-    depends_on:
-      - kafka

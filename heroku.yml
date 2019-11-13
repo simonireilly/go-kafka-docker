@@ -1,0 +1,8 @@
+setup:
+  addons:
+    - plan: cloudkarafka:ducky
+      as: KAFKA
+build:
+  docker:
+    consumer: ./consumer/Dockerfile
+    producer: ./producer/Dockerfile
